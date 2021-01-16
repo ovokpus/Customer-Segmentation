@@ -2,6 +2,9 @@
 
 ##### Capstone Project, Data Science Masters Program (with Simplilearn)
 ---
+<div>
+	<img src="https://github.com/ovokpus/Customer-Segmentation/blob/main/img/customer%20segmentation.jpg">
+</div>
 
 ## Problem Statement
 
