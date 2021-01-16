@@ -15,7 +15,6 @@ Our objective here is to perform customer segmentation using RFM analysis. The r
 
 ### Dataset Description
 ---
-
 This is a transnational data set which contains all the transactions that occurred between 01/12/2010 and 09/12/2011 for a UK-based and registered non-store online retail. The company mainly sells unique and all-occasion gifts.
 
 
@@ -32,13 +31,12 @@ This is a transnational data set which contains all the transactions that occurr
 | **UnitPrice** | Unit price | Numeric, Product price per unit in sterling |
 | **CustomerID** | Customer number | Nominal, a 5-digit integral number uniquely assigned to each customer |
 | **Country** | Country name | Nominal, the name of the country where each customer resides |
-
-
-
-
-#### Project Plan
 ---
 
+
+
+
+### Project Plan
 | Milestones | Week | Details |
 |:---|:---|:---|
 | Data Cleaning & Data Transformation | 1 | 1. Perform a preliminary data inspection and data cleaning.<br>a. Check for missing data and formulate an apt strategy to treat them.<br>b. Remove duplicate data records.<br>c. Perform descriptive analytics on the given data.<br>2. Perform cohort analysis (a cohort is a group of subjects that share a defining characteristic). Observe how a cohort behaves across time and compare it to other cohorts.<br>a. Create month cohorts and analyze active customers for each cohort.<br>b. Analyze the retention rate of customers.<br>3. Goals and Objectives<br>4. Dataset summary |
