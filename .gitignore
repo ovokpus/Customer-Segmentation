@@ -1,3 +1,7 @@
 .ipynb_checkpoints
 __init__.py
 __pycache__/
+output_files
+online_retail.xlsx
+casestudyRetail.docx
+data_class.py
