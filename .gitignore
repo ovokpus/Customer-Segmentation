@@ -5,3 +5,13 @@ output_files
 online_retail.xlsx
 casestudyRetail.docx
 data_class.py
+# local app
+artifacts/
+.venv/
+__pycache__/
+*.pyc
+.env
+node_modules/
+web/dist/
+*.xlsx
+*.zip

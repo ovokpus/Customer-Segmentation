@@ -1,0 +1,12 @@
+services:
+  api:
+    build:
+      context: .
+      args:
+        N_CLUSTERS: ${N_CLUSTERS:-4}
+    ports: ["${API_PORT:-8000}:8000"]
+  web:
+    build: ./web
+    ports: ["${WEB_PORT:-8080}:80"]
+    depends_on:
+      api: { condition: service_healthy }
