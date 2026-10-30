@@ -1,91 +1,133 @@
-# Customer Segmentation by Cohort Analysis and RFM Modelling
+# Customer Segmentation: RFM + K-Means Dashboard
 
-##### Capstone Project, Data Science Masters Program (with Simplilearn)
----
-<div>
-	<img src="https://github.com/ovokpus/Customer-Segmentation/blob/main/img/customer%20segmentation.jpg">
-</div>
+> Who are your best customers, who is slipping away, and which group does a new customer belong to?
+> This repo turns the `retail_project.ipynb` analysis of the **UCI Online Retail** dataset into a running app:
+> a **FastAPI** service plus a **React** dashboard, started with one `docker compose up`.
 
-## Problem Statement
-
-In the retail Industry, it is a critical requirement for businesses to understand the value derived from their customers. RFM is a method used for analyzing customer value.
-
-Customer segmentation is the practice of segregating the customer base into groups of individuals based on some common characteristics such as age, gender, interests, and spending habits.
-
-Our objective here is to perform customer segmentation using RFM analysis. The resulting segments can be ordered from most valuable (highest recency, frequency, and value) to least valuable (lowest recency, frequency, and value).
-
-
-
-### Dataset Description
----
-This is a transnational data set which contains all the transactions that occurred between 01/12/2010 and 09/12/2011 for a UK-based and registered non-store online retail. The company mainly sells unique and all-occasion gifts.
-
-
-**Variables Description**
-
-
-| Variable | Name | Info |
-|:---|:---|:---|
-| **InvoiceNo** | Invoice number| Nominal, a 6-digit integral number uniquely assigned to each transaction. If this code starts with letter 'c', it indicates a cancellation | 
-| **StockCode** | Product (item) code | Nominal, a 5-digit integral number uniquely assigned to each distinct product |
-| **Description** | Product (item) name| Nominal |
-| **Quantity** | The quantities of each product (item) per transaction | Numeric |
-| **InvoiceDate** | Invice Date and time | Numeric, the day and time when each transaction was generated |
-| **UnitPrice** | Unit price | Numeric, Product price per unit in sterling |
-| **CustomerID** | Customer number | Nominal, a 5-digit integral number uniquely assigned to each customer |
-| **Country** | Country name | Nominal, the name of the country where each customer resides |
----
-
-
-
-
-### Project Plan
-| Milestones | Week | Details |
-|:---|:---|:---|
-| Data Cleaning & Data Transformation | 1 | 1. Perform a preliminary data inspection and data cleaning.<br>a. Check for missing data and formulate an apt strategy to treat them.<br>b. Remove duplicate data records.<br>c. Perform descriptive analytics on the given data.<br>2. Perform cohort analysis (a cohort is a group of subjects that share a defining characteristic). Observe how a cohort behaves across time and compare it to other cohorts.<br>a. Create month cohorts and analyze active customers for each cohort.<br>b. Analyze the retention rate of customers. |
-| Data Modeling: RFM analysis | 2 | 1.1. Build an RFM (Recency Frequency Monetary) model.<br>2. Calculate RFM metrics.<br>3. 3. Build RFM Segments. Give recency, frequency, and monetary scores individually by dividing them into quartiles.<br>a.Combine three ratings to get a RFM segment (as strings).<br>b. Get the RFM score by adding up the three ratings.<br>c. Analyze the RFM segments by summarizing them and comment on the findings.<br> |
-| Data Modeling: Kmeans Clustering | 3 | 1. Create clusters using k-means clustering algorithm.<br>a. Prepare the data for the algorithm. If the data is asymmetrically distributed, manage the skewness with appropriate transformation. Standardize the data.<br>b. Decide the optimum number of clusters to be formed.<br>c. Analyze these clusters and comment on the results.<br> | 
-| Data Visualization & Reporting | 4 | 1. Create a dashboard in tableau by choosing appropriate chart types and metrics useful for the business. The dashboard must entail the following:<br>a. Country-wise analysis to demonstrate average spend. Use a bar chart to show the monthly figures<br>b. Bar graph of top 15 products which are mostly ordered by the users to show the number of products sold.<br>c. Bar graph to show the count of orders vs. hours throughout the day<br>d. Plot the distribution of RFM values using histogram and frequency charts<br>e. Plot error (cost) vs. number of clusters selected<br>f. Visualize to compare the RFM values of the clusters using heatmap<br> |
-| Presentation | 5 |1. Presentation write up and Submission |
-
----
-Below is an Overview of the Dataframe:
-
-![alt text](https://github.com/ovokpus/Customer-Segmentation/blob/main/img/dataframe.jpg)
-
-
----
-Heatmaps for visualizing Monthly Cohort Metrics
+![Dashboard overview](docs/screenshots/dashboard-overview.png)
 
 ---
 
-### 1. Retention Rates
+## 1. The problem
 
-![alt text](https://github.com/ovokpus/Customer-Segmentation/blob/main/img/monthly_retention_rates.jpg)
+A UK online gift retailer has **397,884 cleaned transactions** from **4,338 customers** between Dec 2010 and Dec 2011, worth about **£8.9M**.
+Marketing can't treat 4,338 people one at a time, and treating them all the same wastes budget. Segmentation splits them into groups that behave alike, so each group gets its own playbook.
 
----
+## 2. The approach
 
-### 2. Average Quantity
+```mermaid
+flowchart LR
+  A[UCI Online Retail<br/>xlsx, ~540k rows] --> B[Clean<br/>drop missing IDs,<br/>returns, zero prices]
+  B --> C[RFM per customer<br/>Recency · Frequency · Monetary]
+  C --> D[Quartile scores 1–4<br/>RFM score e.g. 111]
+  D --> E[Named RFM segments<br/>Best, Loyal, At Risk…]
+  C --> F[log1p → StandardScaler → K-Means k=4]
+  F --> G[Behavioural clusters<br/>Champions … Hibernating]
+  B --> H[Monthly cohort retention]
+  E & G & H --> I[(artifacts/)]
+  I --> J[FastAPI] --> K[React dashboard]
+```
 
-![alt text](https://github.com/ovokpus/Customer-Segmentation/blob/main/img/avg_quantity_monthly.jpg)
+Two complementary views:
 
----
+| View | How it works | Good for |
+|---|---|---|
+| **RFM segments** | Each customer gets a 1–4 score on R, F and M (1 = best) from the dataset's quartiles. Rules map scores to names: `111` Best Customers, `411` Lost Customers, `444` Lost Cheap, F=1 Loyal, M=1 Big Spenders… | Explainable rules a marketer can read |
+| **K-Means clusters** | RFM values are log-transformed, standardized and clustered (k=4, silhouette 0.335). Clusters are named by ranking their median value. | Data-driven groups with no hand-set thresholds |
 
-### 3. Average Spend
+## 3. What came out
 
-![alt text](https://github.com/ovokpus/Customer-Segmentation/blob/main/img/avg_spend_monthly.jpg)
+![Clusters and segments](docs/screenshots/clusters-segments.png)
 
----
+| Cluster | Customers | Share of revenue | Median recency | Median orders | Median spend |
+|---|---:|---:|---:|---:|---:|
+| **Champions** | 686 | 63.8% | 7 days | 10 | £3,774 |
+| **Loyal Regulars** | 1,199 | 24.7% | 51 days | 4 | £1,380 |
+| **Potential** | 808 | 4.9% | 16 days | 2 | £470 |
+| **Hibernating** | 1,645 | 6.5% | 173 days | 1 | £300 |
 
-### Finally, we have a Dashboard to show the various RFM metrics:
+**About 16% of customers bring in about 64% of revenue.** The Potential group is recent but light, so it's the natural target for a second-purchase campaign. Hibernating is the largest group and needs win-back offers, or no spend at all.
 
-![alt text](https://github.com/ovokpus/Customer-Segmentation/blob/main/img/Dashboard.jpg)
+### Cohort retention
 
+![Cohort retention](docs/screenshots/cohort-retention.png)
 
+Typically 20–25% of a monthly cohort comes back the next month. The December 2010 cohort, which holds the earliest and most loyal buyers, stays at 30–50% all year.
 
+## 4. Assign a new customer
 
+Enter days since last order, number of orders and total spend. The API scores the customer against the fitted quartiles and K-Means model.
 
+![Assign a customer](docs/screenshots/assign-customer.png)
 
+```bash
+curl -X POST localhost:8000/assign -H 'content-type: application/json' \
+  -d '{"recency": 200, "frequency": 2, "monetary": 350}'
+# {"R":4,"F":3,"M":3,"rfm_score":"433","segment":"At Risk","cluster":"Hibernating"}
+```
 
+## 5. Architecture
 
+```mermaid
+flowchart LR
+  U((Browser)) -->|:8080| W[web<br/>nginx + React build]
+  W -->|/api/* proxy| A[api<br/>FastAPI + uvicorn :8000]
+  A --> S[(artifacts/<br/>customers.csv<br/>kmeans.joblib<br/>meta.json)]
+  subgraph build["docker build (api image)"]
+    D[download UCI zip] --> T[segmentation.build] --> S
+  end
+```
 
+The dataset is **downloaded and the model fitted during `docker build`**, so no data or model files are committed.
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /health` | Liveness |
+| `GET /summary` | KPIs, period, monthly revenue |
+| `GET /segments` | RFM segment sizes, revenue share and medians |
+| `GET /clusters` | K-Means cluster profiles |
+| `GET /cohorts` | Monthly cohort retention matrix |
+| `GET /customers?segment=&cluster=&limit=&sample=` | Top (or sampled) customers |
+| `GET /customers/{id}` | One customer's RFM, segment and cluster |
+| `POST /assign` | Score a new customer |
+
+![API docs](docs/screenshots/api-docs.png)
+
+## 6. Run it
+
+```bash
+cp .env.example .env
+docker compose up --build      # first build downloads ~23 MB and fits the model (~1 min)
+# dashboard: http://localhost:8080   API docs: http://localhost:8000/docs
+docker compose down
+```
+
+Local development without Docker:
+
+```bash
+uv sync
+uv run python -m segmentation.build          # writes artifacts/
+uv run uvicorn segmentation.api:app --reload  # :8000
+cd web && npm install && npm run dev          # :5173, proxies /api to :8000
+uv run pytest -q
+```
+
+Screenshots are taken from the running stack with `uv run --with playwright python scripts/screenshots.py`.
+
+## 7. Repo map
+
+```
+src/segmentation/   core.py (cleaning, RFM, scoring, K-Means, cohorts) · build.py · api.py
+web/                React + Vite + TypeScript dashboard, served by nginx
+tests/              pytest unit + API tests on synthetic data
+retail_project.ipynb  original analysis notebook
+docs/ANALYSIS.md    original write-up of the notebook
+PRODUCTIONIZING.md  notebook → service notes
+legacy/             superseded helper code (data_class.py)
+```
+
+## Differences from the notebook
+
+- **Frequency** counts distinct invoices. The notebook counted invoice *lines*, which inflates customers who order many items at once.
+- **k = 4** instead of 13. Thirteen clusters were later merged by hand into Low, Middle and High. Four log-scaled clusters give readable profiles directly, and `N_CLUSTERS` in `.env` changes k.
+- RFM segments are **mutually exclusive** (rules are checked in priority order), so their counts add up to the customer total.

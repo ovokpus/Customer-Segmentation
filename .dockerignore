@@ -1,0 +1,8 @@
+.venv
+artifacts
+web
+legacy
+img
+docs
+*.ipynb
+.git
