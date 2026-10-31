@@ -1,5 +1,7 @@
 # Customer Segmentation: RFM + K-Means Dashboard
 
+<p align="center"><img src="docs/assets/hero.svg" alt="Customer Segmentation" width="100%"/></p>
+
 > Who are your best customers, who is slipping away, and which group does a new customer belong to?
 > This repo turns the `retail_project.ipynb` analysis of the **UCI Online Retail** dataset into a running app:
 > a **FastAPI** service plus a **React** dashboard, started with one `docker compose up`.
@@ -67,6 +69,8 @@ curl -X POST localhost:8000/assign -H 'content-type: application/json' \
 ```
 
 ## 5. Architecture
+
+<p align="center"><img src="docs/assets/flow.svg" alt="Customer Segmentation data flow" width="100%"/></p>
 
 ```mermaid
 flowchart LR
