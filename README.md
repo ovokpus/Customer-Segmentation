@@ -10,6 +10,10 @@
 
 ---
 
+## Business case
+
+Marketing budgets go further when each group of customers gets the offer that fits it. This app scores customers by recency, frequency and spend, clusters them with K-Means, and assigns new customers to a segment through an API. On the UCI Online Retail data, about 16% of customers bring in about 64% of revenue, which is why the groups matter. [docs/BUSINESS_CASE.md](docs/BUSINESS_CASE.md) covers the use cases, an illustrative ROI model and the limits.
+
 ## 1. The problem
 
 A UK online gift retailer has **397,884 cleaned transactions** from **4,338 customers** between Dec 2010 and Dec 2011, worth about **£8.9M**.
