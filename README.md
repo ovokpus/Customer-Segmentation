@@ -1,6 +1,6 @@
-<p align="center"><img src="assets/banner.jpg" alt="Scattered colored beads beside four glass jars sorted into green, cyan, amber and white beads" width="100%"></p>
-
 # Customer Segmentation: RFM + K-Means Dashboard
+
+<p align="center"><img src="assets/banner.jpg" alt="Scattered colored beads beside four glass jars sorted into green, cyan, amber and white beads" width="100%"></p>
 
 <p align="center"><img src="docs/assets/hero.svg" alt="Customer Segmentation" width="100%"/></p>
 
